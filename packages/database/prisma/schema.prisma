@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Table pour stocker les analyses
+model Analysis {
+  id               String   @id @default(cuid())
+  createdAt        DateTime @default(now())
+  hardwareData     Json
+  userProfile      String?
+  recommendations  Json?
+  
+  @@map("analyses")
+}
+
+// Table pour la base de données des composants
+model Component {
+  id               String  @id @default(cuid())
+  type             String  // CPU, GPU, RAM, STORAGE, MOTHERBOARD
+  name             String  @unique
+  
+  // Spécifications (JSON flexible)
+  specs            Json
+  
+  // Score de performance (0-100)
+  performanceScore Int
+  
+  // Prix moyen en euros
+  avgPriceEur      Int?
+  
+  // Lien d'affiliation
+  affiliateLink    String?
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  @@map("components")
+  @@index([type])
+  @@index([performanceScore])
+}
+
+// Table pour les statistiques d'usage (optionnel)
+model AnalysisStats {
+  id        String   @id @default(cuid())
+  date      DateTime @default(now())
+  
+  // Statistiques générales
+  totalAnalyses     Int @default(0)
+  averageScore      Float?
+  popularProfile    String?
+  
+  @@map("analysis_stats")
+  @@index([date])
+}

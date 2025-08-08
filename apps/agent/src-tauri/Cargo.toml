@@ -1,0 +1,23 @@
+[package]
+name = "pcanalys-agent"
+version = "0.1.0"
+description = "PcAnalys Desktop Agent - System analysis and monitoring"
+authors = ["PcAnalys Team"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = { version = "2.0.0-alpha", features = [] }
+
+[dependencies]
+tauri = { version = "2.0.0-alpha", features = ["shell-open"] }
+tauri-plugin-shell = "2.0.0-alpha"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+sysinfo = "0.30"
+
+[[bin]]
+name = "pcanalys-agent"
+path = "src/main.rs"

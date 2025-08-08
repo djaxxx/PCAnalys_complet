@@ -1,0 +1,25 @@
+{
+  "name": "pcanalys",
+  "private": true,
+  "version": "0.1.0",
+  "description": "PcAnalys - Analyse PC gratuite, instantanée et intelligente",
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check",
+    "clean": "turbo clean",
+    "test": "turbo test",
+    "test:watch": "turbo test:watch",
+    "deploy": "turbo deploy",
+    "db:push": "cd packages/database && npm run db:push",
+    "db:migrate": "cd packages/database && npm run db:migrate",
+    "db:studio": "cd packages/database && npm run db:studio"
+  },
+  "devDependencies": {
+    "@turbo/gen": "^2.0.0",
+    "turbo": "^2.0.0",
+    "typescript": "^5.4.0"
+  },
+  "packageManager": "pnpm@8.15.0"
+}
