@@ -12,7 +12,7 @@
   "bundle": {
     "active": true,
     "targets": "all",
-    "icon": ["icons/icon.png", "icons/icon.ico"]
+    "icon": ["icons/icon.ico"]
   },
   "app": {
     "windows": [
