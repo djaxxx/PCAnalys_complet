@@ -2,8 +2,8 @@
 module.exports = {
   extends: [
     "eslint:recommended",
-    "@typescript-eslint/recommended",
-    "eslint-config-turbo",
+    "plugin:@typescript-eslint/recommended",
+    "turbo",
     "prettier",
   ],
   parser: "@typescript-eslint/parser",
@@ -17,10 +17,8 @@ module.exports = {
       "warn",
       { prefer: "type-imports", fixStyle: "separate-type-imports" },
     ],
-    "@typescript-eslint/no-misused-promises": [
-      2,
-      { checksVoidReturn: { attributes: false } },
-    ],
+    // Désactivé pour éviter l'exigence de parserServices/project dans tous les paquets
+    "@typescript-eslint/no-misused-promises": "off",
     "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
   },
   ignorePatterns: [

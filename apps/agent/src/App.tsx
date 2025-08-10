@@ -18,8 +18,8 @@ const App: React.FC = () => {
       setSuccess('Collecte des informations système...');
       const systemInfo = await invoke('get_system_info');
       
-      // Étape 2: Envoi à l'API
-      setSuccess('Envoi des données à l'API...');
+      // Étape 2: Envoi à l'API (localhost pour le développement)
+      setSuccess("Envoi des données à l'API...");
       const response = await fetch('http://localhost:3000/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -34,13 +34,28 @@ const App: React.FC = () => {
       
       if (data.success && data.id) {
         setSuccess('Analyse créée avec succès! Ouverture du rapport...');
-        
-        // Ouvre le rapport dans le navigateur par défaut
-        await open(`http://localhost:3000/a/${data.id}`);
-        
-        // Ferme l'agent après 2 secondes
+
+        const url = `http://localhost:3000/a/${data.id}`;
+        try {
+          // Essaye d'ouvrir dans le navigateur par défaut (plugin shell)
+          await open(url);
+        } catch (openErr) {
+          console.warn('Ouverture via shell échouée, fallback sur webview:', openErr);
+          // Fallback: ouvre dans la webview elle-même
+          try {
+            window.location.href = url;
+          } catch (_) {
+            /* ignore */
+          }
+        }
+
+        // Ferme l'agent après 2 secondes (best-effort, ne pas propager d'erreur)
         setTimeout(() => {
-          window.close();
+          try {
+            window.close();
+          } catch (_) {
+            /* ignore */
+          }
         }, 2000);
       } else {
         throw new Error(data.message || 'Erreur lors de la création du rapport.');
@@ -81,7 +96,7 @@ const App: React.FC = () => {
             Analyse en cours...
           </div>
         ) : (
-          'Lancer l'analyse'
+          'Lancer l\'analyse'
         )}
       </motion.button>
 

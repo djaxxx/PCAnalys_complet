@@ -10,10 +10,10 @@ export const ApiErrorSchema = z.object({
 export type ApiError = z.infer<typeof ApiErrorSchema>;
 
 export const ApiResponseSchema = BaseResponseSchema.extend({
-  data: z.any().optional(),
+  data: z.unknown().optional(),
   error: ApiErrorSchema.optional(),
 });
 
-export type ApiResponse<T = any> = Omit<z.infer<typeof ApiResponseSchema>, 'data'> & {
+export type ApiResponse<T = unknown> = Omit<z.infer<typeof ApiResponseSchema>, 'data'> & {
   data?: T;
 };

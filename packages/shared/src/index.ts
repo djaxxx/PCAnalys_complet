@@ -11,11 +11,11 @@ export const HardwareDataSchema = z.object({
     frequency: z.number(), // GHz
     architecture: z.string(),
   }),
-  gpu: z.object({
+  gpu: z.array(z.object({
     name: z.string(),
     memory: z.number(), // Go
     driver: z.string().optional(),
-  }),
+  })),
   ram: z.object({
     totalMemory: z.number(), // Go
     availableMemory: z.number(), // Go

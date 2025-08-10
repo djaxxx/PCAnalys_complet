@@ -84,7 +84,7 @@ const createFastifyInstance = () => {
   app.addHook('onSend', async (request, reply, payload) => {
     // Add standard headers for API responses
     reply.header('X-API-Version', '1.0.0');
-    reply.header('X-Response-Time', Date.now() - request.startTime);
+    reply.header('X-Response-Time', Date.now() - (request as any).startTime);
     return payload;
   });
 
@@ -122,7 +122,7 @@ const createFastifyInstance = () => {
         success: false,
         error: 'Validation Error',
         message: 'Request data validation failed',
-        details: (error as ZodError).errors,
+        details: (error as unknown as ZodError).errors,
         statusCode: 400,
         timestamp: new Date().toISOString(),
       });

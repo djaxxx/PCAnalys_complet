@@ -2,7 +2,8 @@ import { beforeAll, afterAll, afterEach } from 'vitest'
 
 // Mock environment variables for tests
 beforeAll(() => {
-  process.env.NODE_ENV = 'test'
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+(process.env as any).NODE_ENV = 'test'
   process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test'
   process.env.DIRECT_URL = 'postgresql://test:test@localhost:5432/test'
 })

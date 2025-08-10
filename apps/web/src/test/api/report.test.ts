@@ -236,7 +236,7 @@ describe('GET /api/report/:id', () => {
     expect(response.statusCode).toBe(200)
     
     const body = JSON.parse(response.body)
-    const deserializedData = superjson.deserialize(body.data)
+    const deserializedData = superjson.deserialize(body.data) as any
     
     // Should use new field names when old ones are null
     expect(deserializedData.profile).toBe('productivity') // Should fallback to userProfile
@@ -274,7 +274,7 @@ describe('GET /api/report/:id', () => {
     expect(body.data).toHaveProperty('meta')
     
     // Deserialize and verify Date objects are properly handled
-    const deserializedData = superjson.deserialize(body.data)
+    const deserializedData = superjson.deserialize(body.data) as any
     expect(deserializedData.createdAt).toBeInstanceOf(Date)
     expect(deserializedData.createdAt.toISOString()).toBe(testDate.toISOString())
   })

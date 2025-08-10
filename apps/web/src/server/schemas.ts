@@ -169,23 +169,7 @@ export const RecommendEndpointResponseSchema = z.object({
   timestamp: z.string().datetime(),
 });
 
-// Export all schemas for easy import
-export const schemas = {
-  BaseResponseSchema,
-  ErrorResponseSchema,
-  SystemComponentSchema,
-  ComponentDetailsSchema,
-  SystemAnalysisRequestSchema,
-  SystemAnalysisResponseSchema,
-  UserProfileSchema,
-  RecommendationRequestSchema,
-  RecommendationResponseSchema,
-  BenchmarkDataSchema,
-  HardwareAnalysisRequestSchema,
-  HardwareAnalysisResponseSchema,
-  RecommendEndpointRequestSchema,
-  RecommendEndpointResponseSchema,
-} as const;
+// (moved schemas export to the end of file to avoid hoisting issues)
 
 // Hardware analysis request schema for Tauri agent data
 export const HardwareAnalysisRequestSchema = z.object({
@@ -267,3 +251,21 @@ export type RecommendationResponse = z.infer<typeof RecommendationResponseSchema
 export type BenchmarkData = z.infer<typeof BenchmarkDataSchema>;
 export type HardwareAnalysisRequest = z.infer<typeof HardwareAnalysisRequestSchema>;
 export type HardwareAnalysisResponse = z.infer<typeof HardwareAnalysisResponseSchema>;
+
+// Export all schemas for easy import (placed after all declarations)
+export const schemas = {
+  BaseResponseSchema,
+  ErrorResponseSchema,
+  SystemComponentSchema,
+  ComponentDetailsSchema,
+  SystemAnalysisRequestSchema,
+  SystemAnalysisResponseSchema,
+  UserProfileSchema,
+  RecommendationRequestSchema,
+  RecommendationResponseSchema,
+  BenchmarkDataSchema,
+  HardwareAnalysisRequestSchema,
+  HardwareAnalysisResponseSchema,
+  RecommendEndpointRequestSchema,
+  RecommendEndpointResponseSchema,
+} as const;

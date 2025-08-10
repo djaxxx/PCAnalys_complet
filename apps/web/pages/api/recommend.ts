@@ -5,7 +5,8 @@ import { GroqClient } from '@pcanalys/lib';
 import { z } from 'zod';
 
 const RecommendRequestSchema = z.object({
-  analysisId: z.string().uuid(),
+  // Accepte les IDs générés par Prisma (cuid) et d'éventuels UUID
+  analysisId: z.string().cuid().or(z.string().uuid()).or(z.string().min(1)),
   profile: z.enum(['gaming', 'work', 'content-creation', 'general']),
 });
 
@@ -53,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Get analysis data from database
     const analysis = await DatabaseService.getAnalysis(analysisId);
-    if (!analysis || !analysis.rawData) {
+    if (!analysis) {
       return res.status(404).json({
         success: false,
         error: 'Not Found',
@@ -62,8 +63,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
-    const hardwareData = analysis.rawData as any;
-    const performanceScore = calculatePerformanceScore(hardwareData.hardware, profile);
+    // Backward compatibility: some records may store data in hardwareData instead of rawData
+    const hardwareData = (analysis as any).rawData ?? (analysis as any).hardwareData ?? {};
+    const sourceHardware = (hardwareData as any).hardware ?? hardwareData;
+    const performanceScore = calculatePerformanceScore(sourceHardware, profile);
 
     // Setup streaming response headers
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
@@ -73,7 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Generate streaming recommendations from Groq
     const groqClient = new GroqClient();
-    const stream = await groqClient.generateRecommendations(hardwareData.hardware, profile, true) as AsyncIterable<string>;
+    const stream = await groqClient.generateRecommendations(sourceHardware, profile, true) as AsyncIterable<string>;
     
     let fullContent = '';
     

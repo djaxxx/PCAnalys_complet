@@ -1,4 +1,10 @@
-import { ApiResponse } from '@pcanalys/types';
+type ApiResponse<T> = {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+  timestamp?: string;
+};
 
 export async function apiRequest<T>(
   endpoint: string,
@@ -21,11 +27,13 @@ export async function apiRequest<T>(
 
 export const api = {
   get: <T>(url: string) => apiRequest<T>(url, { method: 'GET' }),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   post: <T>(url: string, data: any) => 
     apiRequest<T>(url, { 
       method: 'POST', 
       body: JSON.stringify(data) 
     }),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   put: <T>(url: string, data: any) => 
     apiRequest<T>(url, { 
       method: 'PUT', 

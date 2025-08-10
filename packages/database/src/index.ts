@@ -1,42 +1,51 @@
 import { PrismaClient } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
-// Instance globale du client Prisma
+// Instance globale du client Prisma (agnostique env)
 declare global {
   // eslint-disable-next-line no-var
   var __prisma: PrismaClient | undefined;
 }
 
 // Singleton pattern pour éviter les multiples connexions
-export const prisma = global.__prisma || new PrismaClient();
+export const prisma = (globalThis as unknown as { __prisma?: PrismaClient }).__prisma || new PrismaClient();
 
-if (process.env.NODE_ENV !== "production") {
-  global.__prisma = prisma;
+const isProd = (() => {
+  try {
+    return ((globalThis as unknown as { process?: { env?: { NODE_ENV?: string } } }).process?.env?.NODE_ENV ?? "production") === "production";
+  } catch {
+    return true;
+  }
+})();
+
+if (!isProd) {
+  (globalThis as unknown as { __prisma?: PrismaClient }).__prisma = prisma;
 }
 
-// Export des types Prisma
-export type { Analysis, Component, AnalysisStats } from "@prisma/client";
+// Note: On n'exporte pas explicitement les types de modèle ici pour éviter une dépendance
+// au client généré lors des checks sans Prisma generate.
 
 // Utilitaires de base pour les opérations courantes
 export class DatabaseService {
   static async createAnalysis(hardwareData: unknown) {
     return await prisma.analysis.create({
       data: {
-        hardwareData: hardwareData as any,
+        hardwareData: hardwareData as unknown as Prisma.AnalysisCreateInput["hardwareData"],
       },
     });
   }
 
   // New method to create analysis from Tauri agent data
   static async createHardwareAnalysis(data: {
-    hardware: any;
-    software: any;
-    systemMetrics?: any;
+    hardware: unknown;
+    software: unknown;
+    systemMetrics?: unknown;
     timestamp?: string;
     agentVersion?: string;
   }) {
     return await prisma.analysis.create({
       data: {
-        hardwareData: data,
+        hardwareData: data as unknown as Prisma.AnalysisCreateInput["hardwareData"],
         createdAt: data.timestamp ? new Date(data.timestamp) : new Date(),
       },
     });
@@ -57,7 +66,7 @@ export class DatabaseService {
     return await prisma.analysis.update({
       where: { id },
       data: {
-        recommendations: recommendations as any,
+        recommendations: recommendations as unknown as Prisma.AnalysisUpdateInput["recommendations"],
         ...(userProfile && { userProfile }),
       },
     });
@@ -95,11 +104,12 @@ export class DatabaseService {
       },
     });
 
-    // Note: performanceScore removed from schema, using recommendations count instead
     const analysesWithRecommendations = await prisma.analysis.count({
       where: {
         createdAt: { gte: since },
-        recommendations: { not: null },
+        NOT: {
+          recommendations: null,
+        },
       },
     });
 

@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 export default function HomePage() {
   const handleDownloadAgent = () => {
     // TODO: Lien vers le téléchargement de l'agent
-    window.open("#", "_blank");
+    window.open("https://github.com/your-repo/pcanalys/releases/latest", "_blank");
   };
 
   const features = [
