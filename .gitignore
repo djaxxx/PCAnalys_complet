@@ -159,3 +159,4 @@ coverage/
 
 # Vercel
 .vercel
+*.tsbuildinfo
