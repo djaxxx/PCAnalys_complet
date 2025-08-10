@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  transpilePackages: ["@pcanalys/shared", "@pcanalys/database"],
+  transpilePackages: ['@pcanalys/shared', '@pcanalys/database'],
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -50,7 +50,7 @@ const nextConfig = {
           },
         ],
       },
-    ];
+    ]
   },
 
   // Redirections
@@ -61,8 +61,8 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
-    ];
+    ]
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

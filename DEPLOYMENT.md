@@ -5,6 +5,7 @@ Ce guide détaille les étapes pour déployer l'application PcAnalys en producti
 ## 📋 Prérequis
 
 ### Services Externes
+
 - **Vercel** : Hébergement frontend et API
 - **Supabase** : Base de données PostgreSQL
 - **Groq** : API d'intelligence artificielle
@@ -13,6 +14,7 @@ Ce guide détaille les étapes pour déployer l'application PcAnalys en producti
 ### Variables d'Environnement
 
 #### Web Application (.env.local)
+
 ```bash
 # Base de données Supabase
 DATABASE_URL="postgresql://..."
@@ -30,6 +32,7 @@ VERCEL_URL="your-domain.vercel.app"
 ```
 
 #### Secrets GitHub Actions
+
 ```bash
 # Vercel
 VERCEL_TOKEN="your-vercel-token"
@@ -43,6 +46,7 @@ GITHUB_TOKEN # (fourni automatiquement)
 ## 🌐 Déploiement Web (Vercel)
 
 ### 1. Configuration Vercel
+
 ```bash
 # Installation CLI Vercel
 npm i -g vercel
@@ -59,6 +63,7 @@ vercel --prod
 ```
 
 ### 2. Configuration Base de Données
+
 ```bash
 # Migration Prisma
 cd packages/database
@@ -68,6 +73,7 @@ npx prisma db seed
 ```
 
 ### 3. Variables d'Environnement Vercel
+
 - Aller sur [Vercel Dashboard](https://vercel.com/dashboard)
 - Sélectionner le projet
 - Settings → Environment Variables
@@ -78,6 +84,7 @@ npx prisma db seed
 ### 1. Prérequis Système
 
 #### Windows
+
 ```powershell
 # Installer Rust
 winget install Rustlang.Rustup
@@ -87,6 +94,7 @@ rustup default stable
 ```
 
 #### macOS
+
 ```bash
 # Installer Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -96,6 +104,7 @@ xcode-select --install
 ```
 
 #### Linux (Ubuntu/Debian)
+
 ```bash
 # Installer Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -111,6 +120,7 @@ sudo apt install -y \
 ```
 
 ### 2. Build Local
+
 ```bash
 # Aller dans le dossier agent
 cd apps/agent
@@ -123,7 +133,9 @@ pnpm tauri build
 ```
 
 ### 3. Distribution
+
 Les binaires sont générés dans :
+
 - Windows : `src-tauri/target/release/bundle/msi/`
 - macOS : `src-tauri/target/release/bundle/dmg/`
 - Linux : `src-tauri/target/release/bundle/deb/` et `bundle/appimage/`
@@ -131,18 +143,23 @@ Les binaires sont générés dans :
 ## 🔄 CI/CD Automatique
 
 ### GitHub Actions
+
 Le pipeline CI/CD se déclenche automatiquement sur :
+
 - **Push** sur `main` ou `develop`
 - **Pull Request** vers `main`
 
 ### Workflow
+
 1. **Lint & Test** : Vérification du code
 2. **Build Agent** : Compilation multi-plateforme
 3. **Deploy Web** : Déploiement Vercel
 4. **Release** : Création automatique des releases
 
 ### Release
+
 Pour créer une release :
+
 ```bash
 git commit -m "feat: nouvelle fonctionnalité [release]"
 git push origin main
@@ -151,18 +168,21 @@ git push origin main
 ## 🔧 Configuration Production
 
 ### 1. Sécurité
+
 - [ ] Configurer CSP strict
 - [ ] Activer HSTS
 - [ ] Vérifier les CORS
 - [ ] Audit sécurité des dépendances
 
 ### 2. Performance
+
 - [ ] Optimiser les images
 - [ ] Configurer le cache
 - [ ] Monitoring des performances
 - [ ] CDN pour les assets statiques
 
 ### 3. Monitoring
+
 - [ ] Logs d'erreur (Sentry)
 - [ ] Analytics (Vercel Analytics)
 - [ ] Monitoring uptime
@@ -171,12 +191,14 @@ git push origin main
 ## 📊 Métriques de Succès
 
 ### KPIs Techniques
+
 - Temps de chargement < 2s
 - Uptime > 99.9%
 - Taille agent < 10MB
 - Score Lighthouse > 90
 
 ### KPIs Business
+
 - Analyses par jour
 - Taux de conversion agent → web
 - Satisfaction utilisateur
@@ -187,6 +209,7 @@ git push origin main
 ### Erreurs Communes
 
 #### Build Tauri
+
 ```bash
 # Erreur de compilation Rust
 cargo clean
@@ -197,6 +220,7 @@ cargo build
 ```
 
 #### Déploiement Vercel
+
 ```bash
 # Erreur de build
 vercel logs
@@ -206,6 +230,7 @@ vercel env ls
 ```
 
 #### Base de Données
+
 ```bash
 # Erreur de migration
 npx prisma migrate reset

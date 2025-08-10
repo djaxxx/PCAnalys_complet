@@ -1,44 +1,46 @@
-"use client";
+'use client'
 
-import { motion } from "framer-motion";
-import { Computer, Zap, Shield, TrendingUp, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { motion } from 'framer-motion'
+import { Computer, Zap, Shield, TrendingUp, Download } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function HomePage() {
   const handleDownloadAgent = () => {
     // TODO: Lien vers le téléchargement de l'agent
-    window.open("https://github.com/your-repo/pcanalys/releases/latest", "_blank");
-  };
+    window.open('https://github.com/your-repo/pcanalys/releases/latest', '_blank')
+  }
 
   const features = [
     {
       icon: Computer,
-      title: "Analyse Complète",
+      title: 'Analyse Complète',
       description: "Scanne automatiquement tous vos composants pour une vue d'ensemble détaillée.",
     },
     {
       icon: Zap,
-      title: "Recommandations IA",
-      description: "Suggestions personnalisées basées sur votre profil d'utilisation et votre budget.",
+      title: 'Recommandations IA',
+      description:
+        "Suggestions personnalisées basées sur votre profil d'utilisation et votre budget.",
     },
     {
       icon: Shield,
-      title: "Sécurisé & Privé",
-      description: "Aucune donnée sensible n'est stockée. Agent léger et respectueux de votre vie privée.",
+      title: 'Sécurisé & Privé',
+      description:
+        "Aucune donnée sensible n'est stockée. Agent léger et respectueux de votre vie privée.",
     },
     {
       icon: TrendingUp,
-      title: "Score de Performance",
-      description: "Évaluation instantanée de votre configuration avec des métriques claires.",
+      title: 'Score de Performance',
+      description: 'Évaluation instantanée de votre configuration avec des métriques claires.',
     },
-  ];
+  ]
 
   const steps = [
     {
       step: 1,
       title: "Téléchargez l'Agent",
-      description: "Un petit exécutable (<10MB) pour analyser votre PC en toute sécurité.",
+      description: 'Un petit exécutable (<10MB) pour analyser votre PC en toute sécurité.',
     },
     {
       step: 2,
@@ -47,10 +49,10 @@ export default function HomePage() {
     },
     {
       step: 3,
-      title: "Consultez vos Résultats",
-      description: "Rapport détaillé avec recommandations personnalisées dans votre navigateur.",
+      title: 'Consultez vos Résultats',
+      description: 'Rapport détaillé avec recommandations personnalisées dans votre navigateur.',
     },
-  ];
+  ]
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -63,10 +65,16 @@ export default function HomePage() {
               <span className="text-2xl font-bold">PcAnalys</span>
             </div>
             <div className="hidden md:flex items-center space-x-6">
-              <a href="#features" className="text-muted-foreground hover:text-primary transition-colors">
+              <a
+                href="#features"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
                 Fonctionnalités
               </a>
-              <a href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors">
+              <a
+                href="#how-it-works"
+                className="text-muted-foreground hover:text-primary transition-colors"
+              >
                 Comment ça marche
               </a>
               <Button variant="outline" size="sm">
@@ -86,13 +94,12 @@ export default function HomePage() {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              Analyse PC{" "}
-              <span className="text-yellow-300">Gratuite</span> et{" "}
+              Analyse PC <span className="text-yellow-300">Gratuite</span> et{' '}
               <span className="text-yellow-300">Intelligente</span>
             </h1>
             <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
-              Découvrez la vraie performance de votre PC et obtenez des recommandations personnalisées
-              pour optimiser votre configuration.
+              Découvrez la vraie performance de votre PC et obtenez des recommandations
+              personnalisées pour optimiser votre configuration.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -125,12 +132,10 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Pourquoi choisir PcAnalys ?
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Pourquoi choisir PcAnalys ?</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Notre solution combine simplicité, sécurité et intelligence artificielle
-              pour vous offrir la meilleure analyse PC.
+              Notre solution combine simplicité, sécurité et intelligence artificielle pour vous
+              offrir la meilleure analyse PC.
             </p>
           </motion.div>
 
@@ -168,9 +173,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Comment ça marche ?
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Comment ça marche ?</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Trois étapes simples pour obtenir une analyse complète de votre PC.
             </p>
@@ -225,5 +228,5 @@ export default function HomePage() {
         </div>
       </footer>
     </div>
-  );
+  )
 }

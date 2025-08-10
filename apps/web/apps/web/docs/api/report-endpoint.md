@@ -106,52 +106,52 @@ Returns the report data serialized with superjson to properly handle Date object
 ### JavaScript/TypeScript with fetch
 
 ```javascript
-import superjson from 'superjson';
+import superjson from 'superjson'
 
 async function fetchReport(reportId) {
   try {
-    const response = await fetch(`/api/report/${reportId}`);
-    
+    const response = await fetch(`/api/report/${reportId}`)
+
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message);
+      const error = await response.json()
+      throw new Error(error.message)
     }
-    
-    const result = await response.json();
-    
+
+    const result = await response.json()
+
     // Deserialize the data to restore Date objects and other complex types
-    const reportData = superjson.deserialize(result.data);
-    
-    console.log('Report created at:', reportData.createdAt); // This is a proper Date object
-    return reportData;
+    const reportData = superjson.deserialize(result.data)
+
+    console.log('Report created at:', reportData.createdAt) // This is a proper Date object
+    return reportData
   } catch (error) {
-    console.error('Failed to fetch report:', error.message);
+    console.error('Failed to fetch report:', error.message)
   }
 }
 
 // Usage
-fetchReport('550e8400-e29b-41d4-a716-446655440000');
+fetchReport('550e8400-e29b-41d4-a716-446655440000')
 ```
 
 ### Using with React Query
 
 ```javascript
-import { useQuery } from '@tanstack/react-query';
-import superjson from 'superjson';
+import { useQuery } from '@tanstack/react-query'
+import superjson from 'superjson'
 
 function useReport(reportId) {
   return useQuery({
     queryKey: ['report', reportId],
     queryFn: async () => {
-      const response = await fetch(`/api/report/${reportId}`);
+      const response = await fetch(`/api/report/${reportId}`)
       if (!response.ok) {
-        throw new Error('Failed to fetch report');
+        throw new Error('Failed to fetch report')
       }
-      const result = await response.json();
-      return superjson.deserialize(result.data);
+      const result = await response.json()
+      return superjson.deserialize(result.data)
     },
     enabled: !!reportId,
-  });
+  })
 }
 ```
 
@@ -173,6 +173,7 @@ pnpm test src/test/api/report.test.ts
 ```
 
 The tests cover:
+
 - Successful data retrieval
 - 404 handling for non-existent IDs
 - 400 handling for invalid ID formats

@@ -26,6 +26,8 @@
   },
   "eslintConfig": {
     "root": true,
-    "extends": ["@pcanalys/eslint-config/base.js"]
+    "extends": [
+      "@pcanalys/eslint-config/base.js"
+    ]
   }
 }

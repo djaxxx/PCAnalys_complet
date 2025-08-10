@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll, vi, beforeEach } from 'vitest'
 import { createMocks } from 'node-mocks-http'
-import handler from '../../../pages/api/[...path]'
+import catchAllHandler from '../../../pages/api/[...path]'
+import analyzeHandler from '../../../pages/api/analyze'
 import { DatabaseService } from '@pcanalys/database'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
@@ -94,13 +95,13 @@ describe('Integration: POST /api/analyze', () => {
       id: '550e8400-e29b-41d4-a716-446655440000',
       createdAt: new Date('2025-01-08T10:35:00.000Z'),
     }
-    
+
     vi.mocked(DatabaseService.createHardwareAnalysis).mockResolvedValueOnce(mockAnalysis as any)
 
-    await handler(req, res)
+    await analyzeHandler(req, res)
 
     expect(res._getStatusCode()).toBe(201)
-    
+
     const responseData = JSON.parse(res._getData())
     expect(responseData).toMatchObject({
       success: true,
@@ -140,15 +141,15 @@ describe('Integration: POST /api/analyze', () => {
       },
     })
 
-    await handler(req, res)
+    await analyzeHandler(req, res)
 
     expect(res._getStatusCode()).toBe(400)
-    
+
     const responseData = JSON.parse(res._getData())
     expect(responseData).toMatchObject({
       success: false,
       error: expect.any(String),
-      message: expect.stringMatching(/Validation error/),
+      message: 'Invalid hardware data format',
     })
 
     expect(DatabaseService.createHardwareAnalysis).not.toHaveBeenCalled()
@@ -166,13 +167,13 @@ describe('Integration: POST /api/analyze', () => {
 
     // Mock database error
     vi.mocked(DatabaseService.createHardwareAnalysis).mockRejectedValueOnce(
-      new Error('Database connection timeout')
+      new Error('Database connection timeout'),
     )
 
-    await handler(req, res)
+    await analyzeHandler(req, res)
 
     expect(res._getStatusCode()).toBe(500)
-    
+
     const responseData = JSON.parse(res._getData())
     expect(responseData).toMatchObject({
       success: false,
@@ -187,7 +188,7 @@ describe('Integration: POST /api/analyze', () => {
       body: validPayload,
     })
 
-    await handler(req, res)
+    await catchAllHandler(req, res)
 
     expect(res._getStatusCode()).toBe(404)
   })
@@ -198,7 +199,7 @@ describe('Integration: POST /api/analyze', () => {
       query: { path: ['analyze'] },
     })
 
-    await handler(req, res)
+    await catchAllHandler(req, res)
 
     expect(res._getStatusCode()).toBe(404)
   })
@@ -214,7 +215,7 @@ describe('Integration: POST /api/analyze', () => {
       },
     })
 
-    await handler(req, res)
+    await catchAllHandler(req, res)
 
     expect(res._getStatusCode()).toBe(200)
     expect(res._getHeaders()).toHaveProperty('access-control-allow-origin')
@@ -244,13 +245,13 @@ describe('Integration: POST /api/analyze', () => {
       id: '550e8400-e29b-41d4-a716-446655440001',
       createdAt: new Date(),
     }
-    
+
     vi.mocked(DatabaseService.createHardwareAnalysis).mockResolvedValueOnce(mockAnalysis as any)
 
-    await handler(req, res)
+    await analyzeHandler(req, res)
 
     expect(res._getStatusCode()).toBe(201)
-    
+
     const responseData = JSON.parse(res._getData())
     expect(responseData.success).toBe(true)
   })

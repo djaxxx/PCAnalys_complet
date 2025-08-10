@@ -1,32 +1,32 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { DatabaseService } from '@pcanalys/database';
-import { HardwareAnalysisRequestSchema } from '../../src/server/schemas';
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { DatabaseService } from '@pcanalys/database'
+import { HardwareAnalysisRequestSchema } from '../../src/server/schemas'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
 
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    res.status(200).end()
+    return
   }
 
   if (req.method !== 'POST') {
-    res.status(405).json({ success: false, error: 'Method not allowed' });
-    return;
+    res.status(405).json({ success: false, error: 'Method not allowed' })
+    return
   }
 
   try {
     // Supporte deux formats d'entrée:
     // 1) Payload complet conforme à HardwareAnalysisRequestSchema
     // 2) Ancien format { hardwareData: SystemInfo } provenant directement de l'agent
-    let payload: any = req.body;
+    let payload: any = req.body
 
     // Si l'agent envoie { hardwareData: {...} }, normaliser vers le schéma attendu
     if (payload && payload.hardwareData && !payload.hardware) {
-      const sys = payload.hardwareData;
+      const sys = payload.hardwareData
       payload = {
         hardware: {
           cpu: {
@@ -68,10 +68,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
         timestamp: new Date().toISOString(),
         agentVersion: 'unknown',
-      };
+      }
     }
 
-    const normalized = HardwareAnalysisRequestSchema.parse(payload);
+    const normalized = HardwareAnalysisRequestSchema.parse(payload)
 
     const analysis = await DatabaseService.createHardwareAnalysis({
       hardware: normalized.hardware,
@@ -79,7 +79,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       systemMetrics: normalized.systemMetrics,
       timestamp: normalized.timestamp,
       agentVersion: normalized.agentVersion,
-    });
+    })
 
     res.status(201).json({
       success: true,
@@ -90,10 +90,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         createdAt: analysis.createdAt,
       },
       timestamp: new Date().toISOString(),
-    });
-    return;
+    })
+    return
   } catch (error: any) {
-    console.error('Error in /api/analyze:', error);
+    console.error('Error in /api/analyze:', error)
 
     if (error.name === 'ZodError') {
       res.status(400).json({
@@ -102,8 +102,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         message: 'Invalid hardware data format',
         details: error.errors,
         timestamp: new Date().toISOString(),
-      });
-      return;
+      })
+      return
     }
 
     res.status(500).json({
@@ -111,7 +111,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       error: 'Internal Server Error',
       message: error.message || 'Unknown error occurred',
       timestamp: new Date().toISOString(),
-    });
-    return;
+    })
+    return
   }
 }

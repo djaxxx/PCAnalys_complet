@@ -8,27 +8,14 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ],
-      "@pcanalys/types": [
-        "../../packages/types/src/index.ts"
-      ],
-      "@pcanalys/types/*": [
-        "../../packages/types/src/*"
-      ]
+      "@/*": ["./*"],
+      "@pcanalys/types": ["../../packages/types/src/index.ts"],
+      "@pcanalys/types/*": ["../../packages/types/src/*"]
     },
     "jsx": "preserve",
     "types": ["node"],
     "strictNullChecks": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

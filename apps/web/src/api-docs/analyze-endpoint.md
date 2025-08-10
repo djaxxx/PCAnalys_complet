@@ -5,12 +5,15 @@ The `/api/analyze` endpoint accepts hardware and software information from the T
 ## Request
 
 ### Method
+
 `POST`
 
 ### URL
+
 `/api/analyze`
 
 ### Headers
+
 - `Content-Type: application/json`
 
 ### Request Body Schema
@@ -38,7 +41,7 @@ interface AnalyzeRequest {
       available: number // bytes
       used: number // bytes
       fileSystem: string
-      type?: "SSD" | "HDD" | "NVME" | "unknown"
+      type?: 'SSD' | 'HDD' | 'NVME' | 'unknown'
     }>
     gpu: Array<{
       name: string
@@ -215,6 +218,7 @@ interface ErrorResponse {
 ## Validation Rules
 
 ### Required Fields
+
 - `hardware.cpu.name` (string, min length: 1)
 - `hardware.cpu.cores` (number)
 - `hardware.cpu.frequency` (number)
@@ -228,11 +232,13 @@ interface ErrorResponse {
 - `software.os.arch` (string)
 
 ### Optional Fields
+
 - All fields marked with `?` in the schema are optional
 - Empty arrays are allowed for `storage` and `gpu`
 - `systemMetrics` object is entirely optional
 
 ### Constraints
+
 - `systemMetrics.cpuUsage`: 0-100
 - `systemMetrics.memoryUsage`: 0-100
 - `timestamp`: Valid ISO datetime string
@@ -241,6 +247,7 @@ interface ErrorResponse {
 ## CORS Support
 
 The endpoint includes full CORS support for Tauri applications with the following origins allowed:
+
 - `tauri://localhost`
 - `https://tauri.localhost`
 - `http://localhost:1420` (Tauri dev server)
@@ -253,6 +260,7 @@ The analysis data is stored in the PostgreSQL database using Prisma ORM. The ful
 ## Error Handling
 
 The endpoint includes comprehensive error handling for:
+
 - Invalid JSON payloads
 - Schema validation errors (using Zod)
 - Database connection errors

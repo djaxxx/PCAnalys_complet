@@ -9,10 +9,12 @@ PcAnalys est une solution complète d'analyse de configuration PC qui combine un
 Le projet utilise une architecture monorepo avec les composants suivants :
 
 ### Applications
+
 - **Web App** (`apps/web`) - Application Next.js 14 avec Tailwind CSS et Radix UI
 - **Desktop Agent** (`apps/agent`) - Agent Tauri 2.0 pour l'analyse système
 
 ### Packages Partagés
+
 - **Database** (`packages/database`) - Prisma ORM avec Supabase
 - **Shared** (`packages/shared`) - Types TypeScript et schémas Zod partagés
 - **UI** (`packages/ui`) - Composants UI réutilisables (à venir)
@@ -31,6 +33,7 @@ Le projet utilise une architecture monorepo avec les composants suivants :
 ## 🎯 Fonctionnalités
 
 ### Phase 1 - MVP (En cours)
+
 - [x] Architecture monorepo
 - [x] Configuration database avec Prisma
 - [x] Application web de base avec Next.js
@@ -40,6 +43,7 @@ Le projet utilise une architecture monorepo avec les composants suivants :
 - [ ] Système de recommandations
 
 ### Phase 2 - Fonctionnalités Cœur
+
 - [ ] Moteur de recommandation IA
 - [ ] Interface de rapport détaillée
 - [ ] Intégration Groq API
@@ -47,6 +51,7 @@ Le projet utilise une architecture monorepo avec les composants suivants :
 - [ ] Système de scoring
 
 ### Phase 3 - UX et Déploiement
+
 - [ ] Animations avancées
 - [ ] Conformité RGPD
 - [ ] Tests automatisés
@@ -56,8 +61,9 @@ Le projet utilise une architecture monorepo avec les composants suivants :
 ## 🚦 Démarrage Rapide
 
 ### Prérequis
+
 - Node.js 18+
-- npm ou pnpm
+- pnpm
 - Base de données Supabase configurée
 
 ### Installation
@@ -68,33 +74,38 @@ git clone https://github.com/your-username/pcanalys.git
 cd pcanalys
 
 # Installer les dépendances
-npm install
+pnpm install
 
 # Configurer les variables d'environnement
-cp apps/web/.env.example apps/web/.env.local
-# Éditer .env.local avec vos configurations
+# Copiez votre configuration Supabase et Groq dans apps/web/.env.local
+copy apps/web/.env.example apps/web/.env.local # Windows
+# ou
+cp apps/web/.env.example apps/web/.env.local   # macOS/Linux
 
-# Générer le client Prisma
-npm run db:generate
+# Générer le client Prisma (ne nécessite pas la DB)
+pnpm db:generate
 
 # Démarrer en mode développement
-npm run dev
+pnpm dev
 ```
 
 ### Scripts Disponibles
 
 ```bash
 # Développement
-npm run dev          # Démarrer tous les services en mode dev
-npm run build        # Construire tous les packages et apps
-npm run lint         # Linter tout le code
-npm run type-check   # Vérification TypeScript
+pnpm dev             # Démarrer tous les services en mode dev
+pnpm build           # Construire tous les packages et apps
+pnpm lint            # Linter tout le code
+pnpm type-check      # Vérification TypeScript
+pnpm test            # Lancer les tests
+pnpm format          # Formater avec Prettier
+pnpm format:check    # Vérifier le formatage
 
-# Database
-npm run db:push      # Synchroniser le schema avec la DB
-npm run db:migrate   # Créer une nouvelle migration
-npm run db:studio    # Ouvrir Prisma Studio
-npm run db:seed      # Peupler la DB avec des données d'exemple
+# Database (requiert DATABASE_URL)
+pnpm db:generate     # Générer le client Prisma
+pnpm db:push         # Synchroniser le schema avec la DB
+pnpm db:migrate      # Créer une nouvelle migration
+pnpm db:studio       # Ouvrir Prisma Studio
 ```
 
 ## 📁 Structure du Projet
@@ -124,15 +135,23 @@ pcanalys/
 ### Base de Données (Supabase)
 
 1. Créer un projet Supabase
-2. Copier les URLs et clés dans `.env.local`
-3. Configurer le schema : `npm run db:push`
-4. Peupler avec des données : `npm run db:seed`
+2. Copier les URLs et clés dans `apps/web/.env.local` et `packages/database/.env` si vous en utilisez un
+   - `DATABASE_URL=postgresql://...`
+   - `DIRECT_URL=postgresql://...` (optionnel)
+3. Configurer le schema : `pnpm db:push`
+4. (Optionnel) Peupler avec des données : `pnpm --filter @pcanalys/database run db:seed`
 
 ### API Groq (Recommandations IA)
 
 1. Créer un compte sur [Groq](https://groq.com)
 2. Générer une clé API
 3. L'ajouter dans `GROQ_API_KEY`
+
+### Desktop (Tauri)
+
+- Pour builder l'agent localement, installez Rust et les dépendances Tauri: https://tauri.app
+- Sur CI, l'agent est construit sur Windows, macOS et Linux avec `dtolnay/rust-toolchain`.
+- En local sans Rust, le script `apps/agent` tentera un fallback `vite build`.
 
 ## 🤝 Contribution
 
@@ -151,6 +170,7 @@ Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de 
 ## 🙋‍♂️ Support
 
 Pour toute question ou problème :
+
 - Ouvrir une [issue](https://github.com/your-username/pcanalys/issues)
 - Contact : support@pcanalys.com
 

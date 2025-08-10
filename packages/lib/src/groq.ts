@@ -1,26 +1,26 @@
-import Groq from 'groq-sdk';
+import Groq from 'groq-sdk'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type SystemInfo = any;
+type SystemInfo = any
 
 export class GroqClient {
-  private client: Groq;
+  private client: Groq
 
   constructor(apiKey?: string) {
     this.client = new Groq({
       // eslint-disable-next-line turbo/no-undeclared-env-vars
       apiKey: apiKey || process.env.GROQ_API_KEY,
-    });
+    })
   }
 
   async generateRecommendations(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     systemInfo: SystemInfo | any,
     profile?: string,
-    streaming?: boolean
+    streaming?: boolean,
   ): Promise<string[] | AsyncIterable<string>> {
     try {
-      const profileContext = profile ? this.getProfileContext(profile) : '';
-      
+      const profileContext = profile ? this.getProfileContext(profile) : ''
+
       const prompt = `Tu es un expert hardware PC francophone. Analyse ces informations système et produis des recommandations ${profileContext} structurées, concrètes et actionnables en format Markdown.
 
 ${this.formatSystemInfo(systemInfo)}
@@ -59,10 +59,10 @@ Important:
 - Adapter les priorités selon le profil utilisateur.
 - Utiliser des émojis pour améliorer la lisibilité.
 - Ne JAMAIS inventer de références précises si non détectées; rester générique mais utile.
-`;
+`
 
       if (streaming) {
-        return this.generateStreamingRecommendations(prompt);
+        return this.generateStreamingRecommendations(prompt)
       }
 
       const completion = await this.client.chat.completions.create({
@@ -70,25 +70,25 @@ Important:
         model: 'llama3-8b-8192',
         temperature: 0.3,
         max_tokens: 1000,
-      });
+      })
 
-      const content = completion.choices[0]?.message?.content;
-      if (!content) throw new Error('No response from Groq');
+      const content = completion.choices[0]?.message?.content
+      if (!content) throw new Error('No response from Groq')
 
       // Try to extract JSON array from response
-      const jsonMatch = content.match(/\[[\s\S]*\]/);
+      const jsonMatch = content.match(/\[[\s\S]*\]/)
       if (jsonMatch) {
-        return JSON.parse(jsonMatch[0]);
+        return JSON.parse(jsonMatch[0])
       }
 
       // Fallback: split by lines and filter
       return content
         .split('\n')
         .filter(line => line.trim().length > 0 && !line.startsWith('#'))
-        .slice(0, 5);
+        .slice(0, 5)
     } catch (error) {
-      console.error('Error generating recommendations:', error);
-      return ['Unable to generate recommendations at this time'];
+      console.error('Error generating recommendations:', error)
+      return ['Unable to generate recommendations at this time']
     }
   }
 
@@ -100,17 +100,17 @@ Important:
         temperature: 0.3,
         max_tokens: 1000,
         stream: true,
-      });
+      })
 
       for await (const chunk of stream) {
-        const content = chunk.choices[0]?.delta?.content || '';
+        const content = chunk.choices[0]?.delta?.content || ''
         if (content) {
-          yield content;
+          yield content
         }
       }
     } catch (error) {
-      console.error('Error generating streaming recommendations:', error);
-      yield 'Unable to generate recommendations at this time';
+      console.error('Error generating streaming recommendations:', error)
+      yield 'Unable to generate recommendations at this time'
     }
   }
 
@@ -119,9 +119,9 @@ Important:
       gaming: ' focused on gaming performance',
       work: ' focused on productivity and work tasks',
       'content-creation': ' focused on content creation and media production',
-      general: ' for general computer use'
-    };
-    return contexts[profile as keyof typeof contexts] || '';
+      general: ' for general computer use',
+    }
+    return contexts[profile as keyof typeof contexts] || ''
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -131,13 +131,13 @@ Important:
       return `OS: ${systemInfo.os.name} ${systemInfo.os.version} (${systemInfo.os.arch})
 CPU: ${systemInfo.cpu.name} (${systemInfo.cpu.cores} cores, ${systemInfo.cpu.frequency}MHz)
 Memory: ${Math.round(systemInfo.memory.used / 1024 / 1024 / 1024)}GB used / ${Math.round(systemInfo.memory.total / 1024 / 1024 / 1024)}GB total
-GPU: ${Array.isArray(systemInfo.gpu) ? systemInfo.gpu.map((gpu: { name?: string }) => gpu.name).join(', ') : 'Not specified'}`;
+GPU: ${Array.isArray(systemInfo.gpu) ? systemInfo.gpu.map((gpu: { name?: string }) => gpu.name).join(', ') : 'Not specified'}`
     } else {
       // Hardware data format (from Tauri agent)
       return `CPU: ${systemInfo.cpu?.name} (${systemInfo.cpu?.cores} cores, ${systemInfo.cpu?.frequency}MHz)
 Memory: ${Math.round((systemInfo.memory?.total || 0) / 1024 / 1024 / 1024)}GB total
 Storage: ${Array.isArray(systemInfo.storage) ? systemInfo.storage.map((s: { name?: string; total?: number }) => `${s.name} (${Math.round((s.total || 0) / 1024 / 1024 / 1024)}GB)`).join(', ') : 'Not specified'}
-GPU: ${Array.isArray(systemInfo.gpu) ? systemInfo.gpu.map((g: { name?: string }) => g.name).join(', ') : 'Not specified'}`;
+GPU: ${Array.isArray(systemInfo.gpu) ? systemInfo.gpu.map((g: { name?: string }) => g.name).join(', ') : 'Not specified'}`
     }
   }
 }

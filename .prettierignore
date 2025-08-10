@@ -1,0 +1,10 @@
+# Build outputs
+.next
+out
+dist
+build
+coverage
+src-tauri/target
+node_modules
+.turbo
+pnpm-lock.yaml

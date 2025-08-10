@@ -12,9 +12,12 @@
     "test": "turbo test",
     "test:watch": "turbo test:watch",
     "deploy": "turbo deploy",
-    "db:push": "cd packages/database && npm run db:push",
-    "db:migrate": "cd packages/database && npm run db:migrate",
-    "db:studio": "cd packages/database && npm run db:studio"
+    "format": "prettier -w .",
+    "format:check": "prettier -c .",
+    "db:generate": "pnpm -C packages/database run db:generate",
+    "db:push": "pnpm -C packages/database run db:push",
+    "db:migrate": "pnpm -C packages/database run db:migrate",
+    "db:studio": "pnpm -C packages/database run db:studio"
   },
   "devDependencies": {
     "@turbo/gen": "^2.0.0",
@@ -24,6 +27,7 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.32.0",
+    "prettier": "^3.3.3",
     "turbo": "^2.5.5",
     "typescript": "5.5.4"
   },

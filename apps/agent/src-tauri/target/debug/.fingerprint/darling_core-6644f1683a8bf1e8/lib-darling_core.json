@@ -1,1 +1,27 @@
-{"rustc":3062648155896360161,"features":"[\"strsim\", \"suggestions\"]","declared_features":"[\"diagnostics\", \"strsim\", \"suggestions\"]","target":13428977600034985537,"profile":2225463790103693989,"path":15292870685236278310,"deps":[[1345404220202658316,"fnv",false,8758404358252440816],[3060637413840920116,"proc_macro2",false,182227635865930971],[4974441333307933176,"syn",false,10967305495858275633],[11166530783118767604,"strsim",false,18025985841702111502],[15383437925411509181,"ident_case",false,5837780474923892544],[17990358020177143287,"quote",false,12269467895875035933]],"local":[{"CheckDepInfo":{"dep_info":"debug\\.fingerprint\\darling_core-6644f1683a8bf1e8\\dep-lib-darling_core","checksum":false}}],"rustflags":[],"config":2069994364910194474,"compile_kind":0}
+{
+  "rustc": 3062648155896360161,
+  "features": "[\"strsim\", \"suggestions\"]",
+  "declared_features": "[\"diagnostics\", \"strsim\", \"suggestions\"]",
+  "target": 13428977600034985537,
+  "profile": 2225463790103693989,
+  "path": 15292870685236278310,
+  "deps": [
+    [1345404220202658316, "fnv", false, 8758404358252440816],
+    [3060637413840920116, "proc_macro2", false, 182227635865930971],
+    [4974441333307933176, "syn", false, 10967305495858275633],
+    [11166530783118767604, "strsim", false, 18025985841702111502],
+    [15383437925411509181, "ident_case", false, 5837780474923892544],
+    [17990358020177143287, "quote", false, 12269467895875035933]
+  ],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug\\.fingerprint\\darling_core-6644f1683a8bf1e8\\dep-lib-darling_core",
+        "checksum": false
+      }
+    }
+  ],
+  "rustflags": [],
+  "config": 2069994364910194474,
+  "compile_kind": 0
+}

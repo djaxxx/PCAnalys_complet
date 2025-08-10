@@ -1,1 +1,20 @@
-{"rustc":3062648155896360161,"features":"[\"alloc\", \"getrandom\", \"std\"]","declared_features":"[\"alloc\", \"getrandom\", \"serde\", \"serde1\", \"std\"]","target":13770603672348587087,"profile":2225463790103693989,"path":10293070676656979922,"deps":[[9920160576179037441,"getrandom",false,16123784807233503855]],"local":[{"CheckDepInfo":{"dep_info":"debug\\.fingerprint\\rand_core-db2baa391e0092d0\\dep-lib-rand_core","checksum":false}}],"rustflags":[],"config":2069994364910194474,"compile_kind":0}
+{
+  "rustc": 3062648155896360161,
+  "features": "[\"alloc\", \"getrandom\", \"std\"]",
+  "declared_features": "[\"alloc\", \"getrandom\", \"serde\", \"serde1\", \"std\"]",
+  "target": 13770603672348587087,
+  "profile": 2225463790103693989,
+  "path": 10293070676656979922,
+  "deps": [[9920160576179037441, "getrandom", false, 16123784807233503855]],
+  "local": [
+    {
+      "CheckDepInfo": {
+        "dep_info": "debug\\.fingerprint\\rand_core-db2baa391e0092d0\\dep-lib-rand_core",
+        "checksum": false
+      }
+    }
+  ],
+  "rustflags": [],
+  "config": 2069994364910194474,
+  "compile_kind": 0
+}

@@ -1,2 +1,2 @@
 // Label component placeholder
-export const Label = () => null;
+export const Label = () => null

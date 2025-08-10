@@ -16,13 +16,13 @@ describe('POST /api/analyze', () => {
 
   beforeAll(async () => {
     app = createFastifyInstance()
-    
+
     // Register the analyze endpoint for testing
     app.post('/api/analyze', async (request, reply) => {
       try {
         // Validate the incoming data using Zod schema
         const analysisData = app.validateSchema(HardwareAnalysisRequestSchema, request.body)
-        
+
         // Store the analysis data in the database
         const analysis = await DatabaseService.createHardwareAnalysis({
           hardware: analysisData.hardware,
@@ -31,7 +31,7 @@ describe('POST /api/analyze', () => {
           timestamp: analysisData.timestamp,
           agentVersion: analysisData.agentVersion,
         })
-        
+
         // Return success response with analysis ID
         return reply.status(201).send({
           success: true,
@@ -46,7 +46,7 @@ describe('POST /api/analyze', () => {
         throw error
       }
     })
-    
+
     await app.ready()
   })
 
@@ -123,7 +123,7 @@ describe('POST /api/analyze', () => {
       id: '550e8400-e29b-41d4-a716-446655440000',
       createdAt: new Date('2025-01-08T10:35:00.000Z'),
     }
-    
+
     vi.mocked(DatabaseService.createHardwareAnalysis).mockResolvedValueOnce(mockAnalysis as any)
 
     const response = await app.inject({
@@ -133,7 +133,7 @@ describe('POST /api/analyze', () => {
     })
 
     expect(response.statusCode).toBe(201)
-    
+
     const body = JSON.parse(response.body)
     expect(body).toMatchObject({
       success: true,
@@ -143,7 +143,7 @@ describe('POST /api/analyze', () => {
         createdAt: expect.any(String),
       },
     })
-    
+
     expect(DatabaseService.createHardwareAnalysis).toHaveBeenCalledWith({
       hardware: validPayload.hardware,
       software: validPayload.software,
@@ -185,7 +185,7 @@ describe('POST /api/analyze', () => {
     })
 
     expect(response.statusCode).toBe(400)
-    
+
     const body = JSON.parse(response.body)
     expect(body).toMatchObject({
       success: false,
@@ -214,7 +214,7 @@ describe('POST /api/analyze', () => {
     })
 
     expect(response.statusCode).toBe(400)
-    
+
     const body = JSON.parse(response.body)
     expect(body.success).toBe(false)
     expect(body.error).toEqual(expect.any(String))
@@ -244,7 +244,7 @@ describe('POST /api/analyze', () => {
     })
 
     expect(response.statusCode).toBe(400)
-    
+
     const body = JSON.parse(response.body)
     expect(body.success).toBe(false)
     expect(body.message).toMatch(/Validation error/)
@@ -253,7 +253,7 @@ describe('POST /api/analyze', () => {
   it('should handle database errors gracefully', async () => {
     // Mock database error
     vi.mocked(DatabaseService.createHardwareAnalysis).mockRejectedValueOnce(
-      new Error('Database connection failed')
+      new Error('Database connection failed'),
     )
 
     const response = await app.inject({
@@ -263,7 +263,7 @@ describe('POST /api/analyze', () => {
     })
 
     expect(response.statusCode).toBe(500)
-    
+
     const body = JSON.parse(response.body)
     expect(body).toMatchObject({
       success: false,
@@ -314,7 +314,7 @@ describe('POST /api/analyze', () => {
       id: '550e8400-e29b-41d4-a716-446655440001',
       createdAt: new Date(),
     }
-    
+
     vi.mocked(DatabaseService.createHardwareAnalysis).mockResolvedValueOnce(mockAnalysis as any)
 
     const response = await app.inject({
@@ -324,7 +324,7 @@ describe('POST /api/analyze', () => {
     })
 
     expect(response.statusCode).toBe(201)
-    
+
     const body = JSON.parse(response.body)
     expect(body.success).toBe(true)
     expect(body.data.id).toBe(mockAnalysis.id)
@@ -346,7 +346,7 @@ describe('POST /api/analyze', () => {
     })
 
     expect(response.statusCode).toBe(400)
-    
+
     const body = JSON.parse(response.body)
     expect(body.success).toBe(false)
     expect(body.message).toMatch(/Validation error/)
@@ -366,7 +366,7 @@ describe('POST /api/analyze', () => {
       id: '550e8400-e29b-41d4-a716-446655440002',
       createdAt: new Date(),
     }
-    
+
     vi.mocked(DatabaseService.createHardwareAnalysis).mockResolvedValueOnce(mockAnalysis as any)
 
     const response = await app.inject({
@@ -376,7 +376,7 @@ describe('POST /api/analyze', () => {
     })
 
     expect(response.statusCode).toBe(201)
-    
+
     const body = JSON.parse(response.body)
     expect(body.success).toBe(true)
   })

@@ -43,10 +43,10 @@ L'ordinateur dispose d'un processeur **Intel Core i5-1135G7**, **16 Go** de mém
 
 ## 📈 Gains Attendus
 
-| Niveau | Amélioration | Gains moyens |
-|--------|-------------|--------------|
-| **💰 BAS** | Amélioration de la fluidité générale et des performances de jeu | **10-20%** |
-| **💸 MOYEN** | Amélioration significative de la fluidité générale et des performances de jeu | **30-50%** |
-| **💎 HAUT** | Amélioration spectaculaire de la fluidité générale et des performances de jeu | **60-80%** |
+| Niveau       | Amélioration                                                                  | Gains moyens |
+| ------------ | ----------------------------------------------------------------------------- | ------------ |
+| **💰 BAS**   | Amélioration de la fluidité générale et des performances de jeu               | **10-20%**   |
+| **💸 MOYEN** | Amélioration significative de la fluidité générale et des performances de jeu | **30-50%**   |
+| **💎 HAUT**  | Amélioration spectaculaire de la fluidité générale et des performances de jeu | **60-80%**   |
 
 > ⚠️ **Note importante** : Les gains attendus dépendent de nombreux facteurs, notamment le type de jeu et les paramètres de jeu.

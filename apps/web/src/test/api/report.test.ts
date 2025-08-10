@@ -16,12 +16,12 @@ describe('GET /api/report/:id', () => {
 
   beforeAll(async () => {
     app = createFastifyInstance()
-    
+
     // Register the report endpoint for testing (since it's added in [...path].ts)
     app.get('/api/report/:id', async (request, reply) => {
       try {
         const { id } = request.params as { id: string }
-        
+
         // Validate ID format (basic UUID validation)
         if (!id || typeof id !== 'string' || id.length < 10) {
           return reply.status(400).send({
@@ -32,10 +32,10 @@ describe('GET /api/report/:id', () => {
             timestamp: new Date().toISOString(),
           })
         }
-        
+
         // Fetch analysis + recommendations via Prisma
         const analysis = await DatabaseService.getAnalysis(id)
-        
+
         // Return 404 when not found
         if (!analysis) {
           return reply.status(404).send({
@@ -46,20 +46,22 @@ describe('GET /api/report/:id', () => {
             timestamp: new Date().toISOString(),
           })
         }
-        
+
         // Serialize safely with superjson to handle Date objects and other complex types
+        // Cast to any to allow old/new field name access in tests without tightening Prisma model typing
+        const a = analysis as any
         const serializedData = superjson.serialize({
           id: analysis.id,
-          rawData: analysis.rawData,
-          profile: analysis.profile || analysis.userProfile, // Handle both old and new field names
-          score: analysis.score || analysis.performanceScore, // Handle both old and new field names
+          rawData: a?.rawData ?? analysis.hardwareData,
+          profile: a?.profile ?? analysis.userProfile,
+          score: a?.score ?? a?.performanceScore,
           recommendations: analysis.recommendations,
-          performanceScore: analysis.performanceScore,
+          performanceScore: a?.performanceScore,
           userProfile: analysis.userProfile,
           hardwareData: analysis.hardwareData,
           createdAt: analysis.createdAt,
         })
-        
+
         return reply.send({
           success: true,
           timestamp: new Date().toISOString(),
@@ -70,7 +72,7 @@ describe('GET /api/report/:id', () => {
         throw error
       }
     })
-    
+
     await app.ready()
   })
 
@@ -105,7 +107,7 @@ describe('GET /api/report/:id', () => {
       hardwareData: null,
       createdAt: new Date('2025-01-08T10:35:00.000Z'),
     }
-    
+
     vi.mocked(DatabaseService.getAnalysis).mockResolvedValueOnce(mockAnalysis as any)
 
     const response = await app.inject({
@@ -114,7 +116,7 @@ describe('GET /api/report/:id', () => {
     })
 
     expect(response.statusCode).toBe(200)
-    
+
     const body = JSON.parse(response.body)
     expect(body).toMatchObject({
       success: true,
@@ -132,7 +134,7 @@ describe('GET /api/report/:id', () => {
         meta: expect.any(Object), // superjson meta data
       }),
     })
-    
+
     expect(DatabaseService.getAnalysis).toHaveBeenCalledWith('550e8400-e29b-41d4-a716-446655440000')
   })
 
@@ -146,7 +148,7 @@ describe('GET /api/report/:id', () => {
     })
 
     expect(response.statusCode).toBe(404)
-    
+
     const body = JSON.parse(response.body)
     expect(body).toMatchObject({
       success: false,
@@ -164,7 +166,7 @@ describe('GET /api/report/:id', () => {
     })
 
     expect(response.statusCode).toBe(400)
-    
+
     const body = JSON.parse(response.body)
     expect(body).toMatchObject({
       success: false,
@@ -183,7 +185,7 @@ describe('GET /api/report/:id', () => {
 
     // Our validation logic catches empty/invalid IDs and returns 400
     expect(response.statusCode).toBe(400)
-    
+
     const body = JSON.parse(response.body)
     expect(body).toMatchObject({
       success: false,
@@ -195,7 +197,7 @@ describe('GET /api/report/:id', () => {
   it('should handle database errors gracefully', async () => {
     // Mock database error
     vi.mocked(DatabaseService.getAnalysis).mockRejectedValueOnce(
-      new Error('Database connection failed')
+      new Error('Database connection failed'),
     )
 
     const response = await app.inject({
@@ -204,7 +206,7 @@ describe('GET /api/report/:id', () => {
     })
 
     expect(response.statusCode).toBe(500)
-    
+
     const body = JSON.parse(response.body)
     expect(body).toMatchObject({
       success: false,
@@ -225,7 +227,7 @@ describe('GET /api/report/:id', () => {
       hardwareData: { legacy: 'data' },
       createdAt: new Date('2025-01-08T11:00:00.000Z'),
     }
-    
+
     vi.mocked(DatabaseService.getAnalysis).mockResolvedValueOnce(mockAnalysisOldFields as any)
 
     const response = await app.inject({
@@ -234,10 +236,10 @@ describe('GET /api/report/:id', () => {
     })
 
     expect(response.statusCode).toBe(200)
-    
+
     const body = JSON.parse(response.body)
     const deserializedData = superjson.deserialize(body.data) as any
-    
+
     // Should use new field names when old ones are null
     expect(deserializedData.profile).toBe('productivity') // Should fallback to userProfile
     expect(deserializedData.score).toBe(75) // Should fallback to performanceScore
@@ -245,7 +247,7 @@ describe('GET /api/report/:id', () => {
 
   it('should properly serialize Date objects with superjson', async () => {
     const testDate = new Date('2025-01-08T12:30:00.000Z')
-    
+
     const mockAnalysis = {
       id: '550e8400-e29b-41d4-a716-446655440002',
       rawData: { timestamp: testDate },
@@ -257,7 +259,7 @@ describe('GET /api/report/:id', () => {
       hardwareData: null,
       createdAt: testDate,
     }
-    
+
     vi.mocked(DatabaseService.getAnalysis).mockResolvedValueOnce(mockAnalysis as any)
 
     const response = await app.inject({
@@ -266,13 +268,13 @@ describe('GET /api/report/:id', () => {
     })
 
     expect(response.statusCode).toBe(200)
-    
+
     const body = JSON.parse(response.body)
-    
+
     // Verify that superjson serialization includes meta information for Date objects
     expect(body.data).toHaveProperty('json')
     expect(body.data).toHaveProperty('meta')
-    
+
     // Deserialize and verify Date objects are properly handled
     const deserializedData = superjson.deserialize(body.data) as any
     expect(deserializedData.createdAt).toBeInstanceOf(Date)

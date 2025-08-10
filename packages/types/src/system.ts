@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const SystemInfoSchema = z.object({
   os: z.object({
@@ -16,19 +16,23 @@ export const SystemInfoSchema = z.object({
     available: z.number(), // bytes
     used: z.number(), // bytes
   }),
-  storage: z.array(z.object({
-    name: z.string(),
-    mountPoint: z.string(),
-    total: z.number(), // bytes
-    available: z.number(), // bytes
-    used: z.number(), // bytes
-    fileSystem: z.string(),
-  })),
-  gpu: z.array(z.object({
-    name: z.string(),
-    vendor: z.string(),
-    memory: z.number().optional(), // bytes
-  })),
-});
+  storage: z.array(
+    z.object({
+      name: z.string(),
+      mountPoint: z.string(),
+      total: z.number(), // bytes
+      available: z.number(), // bytes
+      used: z.number(), // bytes
+      fileSystem: z.string(),
+    }),
+  ),
+  gpu: z.array(
+    z.object({
+      name: z.string(),
+      vendor: z.string(),
+      memory: z.number().optional(), // bytes
+    }),
+  ),
+})
 
-export type SystemInfo = z.infer<typeof SystemInfoSchema>;
+export type SystemInfo = z.infer<typeof SystemInfoSchema>

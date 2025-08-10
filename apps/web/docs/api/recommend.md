@@ -7,21 +7,24 @@ The `/api/recommend` endpoint generates AI-powered performance recommendations f
 ## Request
 
 ### Method
+
 `POST`
 
 ### Headers
+
 ```http
 Content-Type: application/json
 ```
 
 ### Body Parameters
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `analysisId` | `string` | Yes | UUID of the hardware analysis to generate recommendations for |
-| `profile` | `enum` | Yes | Usage profile: `gaming`, `work`, `content-creation`, or `general` |
+| Parameter    | Type     | Required | Description                                                       |
+| ------------ | -------- | -------- | ----------------------------------------------------------------- |
+| `analysisId` | `string` | Yes      | UUID of the hardware analysis to generate recommendations for     |
+| `profile`    | `enum`   | Yes      | Usage profile: `gaming`, `work`, `content-creation`, or `general` |
 
 ### Example Request Body
+
 ```json
 {
   "analysisId": "12345678-1234-1234-1234-123456789012",
@@ -32,11 +35,13 @@ Content-Type: application/json
 ## Response
 
 ### Success Response (Streaming)
+
 The endpoint streams the AI-generated recommendations as plain text in real-time.
 
 **Status Code:** `200 OK`
 
 **Headers:**
+
 ```http
 Content-Type: text/plain; charset=utf-8
 Transfer-Encoding: chunked
@@ -49,6 +54,7 @@ Connection: keep-alive
 ### Error Responses
 
 #### 400 Bad Request
+
 ```json
 {
   "success": false,
@@ -68,6 +74,7 @@ Connection: keep-alive
 ```
 
 #### 404 Not Found
+
 ```json
 {
   "success": false,
@@ -78,6 +85,7 @@ Connection: keep-alive
 ```
 
 #### 500 Internal Server Error
+
 ```json
 {
   "success": false,
@@ -93,14 +101,15 @@ Connection: keep-alive
 
 The endpoint calculates a performance score based on weighted hardware specifications:
 
-| Profile | CPU Weight | GPU Weight | RAM Weight |
-|---------|------------|------------|------------|
-| Gaming | 0.4 | 0.5 | 0.1 |
-| Work | 0.6 | 0.2 | 0.2 |
-| Content Creation | 0.5 | 0.3 | 0.2 |
-| General | 0.5 | 0.3 | 0.2 |
+| Profile          | CPU Weight | GPU Weight | RAM Weight |
+| ---------------- | ---------- | ---------- | ---------- |
+| Gaming           | 0.4        | 0.5        | 0.1        |
+| Work             | 0.6        | 0.2        | 0.2        |
+| Content Creation | 0.5        | 0.3        | 0.2        |
+| General          | 0.5        | 0.3        | 0.2        |
 
 **Score Calculation:**
+
 - **CPU Score:** `(cores × frequency) / 40000`
 - **GPU Score:** `gpu_memory_bytes / (8GB in bytes)`
 - **RAM Score:** `ram_total_bytes / (16GB in bytes)`
@@ -126,11 +135,14 @@ The endpoint calculates a performance score based on weighted hardware specifica
 ## Database Operations
 
 ### Data Retrieval
+
 - Fetches analysis data using `DatabaseService.getAnalysis(analysisId)`
 - Validates that the analysis exists and contains hardware data
 
 ### Data Persistence
+
 After streaming is complete, saves recommendations using `DatabaseService.updateAnalysisWithRecommendations()`:
+
 ```javascript
 {
   content: "Full generated content",
@@ -143,6 +155,7 @@ After streaming is complete, saves recommendations using `DatabaseService.update
 ## Usage Example
 
 ### JavaScript/Node.js
+
 ```javascript
 async function getRecommendations(analysisId, profile) {
   const response = await fetch('/api/recommend', {
@@ -152,77 +165,76 @@ async function getRecommendations(analysisId, profile) {
     },
     body: JSON.stringify({
       analysisId,
-      profile
-    })
-  });
+      profile,
+    }),
+  })
 
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    throw new Error(`HTTP error! status: ${response.status}`)
   }
 
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let recommendations = '';
+  const reader = response.body.getReader()
+  const decoder = new TextDecoder()
+  let recommendations = ''
 
   while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    
-    const chunk = decoder.decode(value);
-    recommendations += chunk;
-    console.log('Received chunk:', chunk);
+    const { done, value } = await reader.read()
+    if (done) break
+
+    const chunk = decoder.decode(value)
+    recommendations += chunk
+    console.log('Received chunk:', chunk)
   }
 
-  return recommendations;
+  return recommendations
 }
 ```
 
 ### React Component with Streaming
+
 ```jsx
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 function RecommendationComponent({ analysisId, profile }) {
-  const [recommendations, setRecommendations] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [recommendations, setRecommendations] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const generateRecommendations = async () => {
-    setLoading(true);
-    setRecommendations('');
+    setLoading(true)
+    setRecommendations('')
 
     try {
       const response = await fetch('/api/recommend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ analysisId, profile })
-      });
+        body: JSON.stringify({ analysisId, profile }),
+      })
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
 
       while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+        const { done, value } = await reader.read()
+        if (done) break
 
-        const chunk = decoder.decode(value);
-        setRecommendations(prev => prev + chunk);
+        const chunk = decoder.decode(value)
+        setRecommendations(prev => prev + chunk)
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div>
       <button onClick={generateRecommendations} disabled={loading}>
         {loading ? 'Generating...' : 'Get Recommendations'}
       </button>
-      <div style={{ whiteSpace: 'pre-wrap' }}>
-        {recommendations}
-      </div>
+      <div style={{ whiteSpace: 'pre-wrap' }}>{recommendations}</div>
     </div>
-  );
+  )
 }
 ```
 
@@ -244,11 +256,13 @@ function RecommendationComponent({ analysisId, profile }) {
 ## Testing
 
 Run the test suite:
+
 ```bash
 npm test tests/api/recommend.test.ts
 ```
 
 The test suite covers:
+
 - Request method validation
 - Input validation
 - Error handling

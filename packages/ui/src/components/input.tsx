@@ -1,2 +1,2 @@
 // Input component placeholder
-export const Input = () => null;
+export const Input = () => null
