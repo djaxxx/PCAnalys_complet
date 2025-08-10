@@ -4,7 +4,16 @@ out
 dist
 build
 coverage
-src-tauri/target
 node_modules
 .turbo
 pnpm-lock.yaml
+
+# Tauri build outputs (all packages)
+**/src-tauri/target/
+apps/agent/src-tauri/target/
+
+# OS/editor caches
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

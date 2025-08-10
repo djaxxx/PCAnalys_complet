@@ -125,7 +125,8 @@ pids
 .vscode-test
 
 # Tauri
-src-tauri/target/
+**/src-tauri/target/
+apps/agent/src-tauri/target/
 src-tauri/Cargo.lock
 
 # Prisma

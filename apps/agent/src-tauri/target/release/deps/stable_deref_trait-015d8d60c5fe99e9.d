@@ -1,7 +1,0 @@
-C:\Users\jacqu\OneDrive\Documents\GitHub\PcAnalys\Ultima\apps\agent\src-tauri\target\release\deps\stable_deref_trait-015d8d60c5fe99e9.d: C:\Users\jacqu\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\stable_deref_trait-1.2.0\src\lib.rs
-
-C:\Users\jacqu\OneDrive\Documents\GitHub\PcAnalys\Ultima\apps\agent\src-tauri\target\release\deps\libstable_deref_trait-015d8d60c5fe99e9.rlib: C:\Users\jacqu\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\stable_deref_trait-1.2.0\src\lib.rs
-
-C:\Users\jacqu\OneDrive\Documents\GitHub\PcAnalys\Ultima\apps\agent\src-tauri\target\release\deps\libstable_deref_trait-015d8d60c5fe99e9.rmeta: C:\Users\jacqu\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\stable_deref_trait-1.2.0\src\lib.rs
-
-C:\Users\jacqu\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\stable_deref_trait-1.2.0\src\lib.rs:
